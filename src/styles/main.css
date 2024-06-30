@@ -1,0 +1,310 @@
+/* Reset CSS */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    line-height: 1.6;
+    padding-top: 0;
+    margin-top: 0;
+    padding-bottom: 60px;
+    background-color: #f5f5f5; /* Lighter background color */
+}
+
+a {
+    text-decoration: none;
+    color: #333; /* Link text color */
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Skip to Content Button */
+.skip-link {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #333;
+    color: white;
+    padding: 8px;
+    z-index: 1000; /* Ensure it's above other content */
+    cursor: pointer;
+    transition: opacity 0.3s;
+    display: none; /* Hide by default */
+}
+
+.skip-link:focus,
+.skip-link:hover {
+    opacity: 0.7;
+}
+
+/* Back to Top Link */
+.back-to-top {
+    position: fixed;
+    bottom: 80px; /* Adjusted position to be above the footer */
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 8px;
+    display: none; /* Hide by default */
+    z-index: 101; /* Higher z-index than the footer */
+    transition: opacity 0.3s;
+}
+
+.back-to-top:focus,
+.back-to-top:hover {
+    opacity: 0.7;
+}
+
+/* Show the Back to Top link when scrolling down */
+body.nav-open .back-to-top {
+    display: block;
+}
+
+/* Header */
+header {
+    background-color: #ffcc00; /* Bright header background color */
+    color: #333; /* Header text color */
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo a {
+    font-size: 30px; /* Slightly smaller font size */
+    color: #333; /* Logo text color */
+    padding: 10px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+    width: 40%; /* Original width before shrinking */
+}
+
+.nav-links a {
+    display: inline-block;
+    min-width: 44px; /* Minimum dimensions for touch target */
+    min-height: 44px; /* Minimum dimensions for touch target */
+    text-align: center;
+    font-size: 20px; /* Adjusted font size */
+    color: #333; /* Link text color */
+}
+
+/* Hamburger Button */
+.burger {
+    display: none; /* Hide hamburger button for desktop version */
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 50px;
+    height: 50px;
+}
+
+.burger .line1, .burger .line2, .burger .line3 {
+    width: 40px;
+    height: 3px;
+    padding-bottom: 5px;
+    background-color: #333;
+    margin: 4px;
+    transition: transform 0.4s;
+}
+
+/* Hamburger Button Appearance for Mobile Version */
+@media only screen and (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide main navigation menu for mobile version */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 80%; /* Expand menu for off-canvas */
+        background-color: #fff; /* Menu background color */
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .nav-active .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(0); /* Slide menu to the correct position */
+    }
+
+    .nav-links a {
+        min-width: 44px; /* Minimum dimensions for touch target */
+        min-height: 44px; /* Minimum dimensions for touch target */
+        text-align: center;
+        font-size: 20px; /* Adjusted font size */
+        color: #333; /* Link text color */
+    }
+
+    .burger {
+        display: block;
+    }
+
+    /* Change appearance of hamburger when active */
+    .burger.active .line1 {
+        transform: translateY(6px) rotate(45deg);
+    }
+
+    .burger.active .line2 {
+        opacity: 0;
+    }
+
+    .burger.active .line3 {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+}
+
+.hero img {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+/* Restaurant List Section */
+.restaurant-list {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.restaurant {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+}
+
+.restaurant img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.restaurant a {
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 30px;
+}
+
+.restaurant p {
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 20px;
+    height: 50px;
+}
+
+/* Footer */
+footer {
+    background-color: #333; /* Dark footer background color */
+    color: #fff; /* Footer text color */
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 998; /* Lower z-index than the back to top button */
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Input Text and Textarea */
+input[type="text"], textarea {
+    min-width: 44px; /* Minimum dimensions for touch target */
+    min-height: 44px; /* Minimum dimensions for touch target */
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 1024px) {
+    .restaurant-list {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .restaurant-list {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .restaurant a {
+        font-size: 30px; /* Smaller font size for mobile */
+    }
+
+    .burger {
+        display: block; /* Display hamburger button for mobile version */
+        z-index: 1000;
+    }
+
+    .burger.active .line1 {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .burger.active .line2 {
+        opacity: 0;
+    }
+
+    .burger.active .line3 {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .skip-link {
+        top: 10px; /* Adjust position for mobile */
+        left: 10px; /* Adjust position for mobile */
+    }
+
+    .back-to-top {
+        bottom: 80px; /* Adjust position for mobile */
+        right: 20px; /* Adjust position for mobile */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .restaurant-list {
+        padding: 10px;
+    }
+}
