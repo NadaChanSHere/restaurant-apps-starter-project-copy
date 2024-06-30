@@ -5,16 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorite Restaurants</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 
 <body>
+    <!-- Skip to Content Button -->
     <header>
         <button class="skip-link" id="skip-to-content" tabindex="0">Skip to Content</button>
         <nav>
             <div class="logo">
-                <a href="/">Restaurant Catalog</a>
+                <a href="#">Restaurant Catalog</a>
             </div>
+            <!-- Hamburger Button (For Mobile Version) -->
             <button class="burger" aria-label="Toggle Menu" aria-expanded="false">
                 <div class="line1"></div>
                 <div class="line2"></div>
@@ -22,30 +24,173 @@
             </button>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/favorites.html">Favorites</a></li>
                 <li><a href="#">About Us</a></li>
             </ul>
         </nav>
     </header>
 
+    <!-- Main Content -->
     <main id="main-content">
-        <section class="favorite-restaurants" id="favorite-restaurants">
-            <!-- Favorite restaurants will be displayed here -->
+        <!-- Favorite Restaurants Section -->
+        <section class="favorite-restaurants">
+            <h1>Favorite Restaurants</h1>
+            <ul id="favorite-list">
+                <!-- List of favorite restaurants will be displayed here -->
+            </ul>
         </section>
     </main>
 
+    <!-- Back to Top Link -->
     <a href="#top" class="back-to-top">Back to Top</a>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <p>&copy; 2024 - Restaurant Catalog. All rights reserved.</p>
+            <!-- Additional footer content -->
         </div>
     </footer>
 
-    <script src="../scripts/menu.js"></script>
-    <script src="../scripts/favorites.js"></script>
-    <script src="../scripts/skipAndTop.js"></script>
-    <script src="../scripts/serviceWorker.js"></script>
+    <!-- JavaScript for Hamburger Button and Off-canvas Menu -->
+    <script>
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('nav');
+
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active'); // Add 'active' class to hamburger button
+            nav.classList.toggle('nav-active');
+            document.body.classList.toggle('nav-open');
+
+            const expanded = burger.getAttribute('aria-expanded') === 'true' || false;
+            burger.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Close menu when a link is clicked
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active'); // Remove 'active' class from hamburger button
+                nav.classList.remove('nav-active');
+                document.body.classList.remove('nav-open');
+                burger.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Close menu when clicking outside the menu
+        document.addEventListener('click', (event) => {
+            if (!nav.contains(event.target) && !burger.contains(event.target)) {
+                burger.classList.remove('active'); // Remove 'active' class from hamburger button
+                nav.classList.remove('nav-active');
+                document.body.classList.remove('nav-open');
+                burger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+
+    <!-- JavaScript to Fetch and Display Favorite Restaurants -->
+    <script>
+        // Example of favorite restaurant data (replace with actual data handling logic)
+        const favoriteRestaurants = [
+            {
+                id: '1',
+                name: 'Favorite Restaurant 1',
+                city: 'City 1',
+                address: 'Address 1',
+                pictureId: 'img/restaurant-1.jpg',
+                description: 'Description 1',
+                menus: {
+                    foods: ['Food A', 'Food B'],
+                    drinks: ['Drink X', 'Drink Y']
+                },
+                customerReviews: [
+                    { name: 'Customer A', date: '2024-06-30', review: 'Review 1' },
+                    { name: 'Customer B', date: '2024-06-29', review: 'Review 2' }
+                ]
+            },
+            // Add more favorite restaurants as needed
+        ];
+
+        // Function to display favorite restaurants
+        function displayFavoriteRestaurants() {
+            const favoriteList = document.getElementById('favorite-list');
+
+            // Clear existing list items
+            favoriteList.innerHTML = '';
+
+            // Generate HTML for each favorite restaurant
+            favoriteRestaurants.forEach(restaurant => {
+                const restaurantItem = document.createElement('li');
+                restaurantItem.innerHTML = `
+                    <h2>${restaurant.name}</h2>
+                    <img src="${restaurant.pictureId}" alt="${restaurant.name}">
+                    <p>City: ${restaurant.city}</p>
+                    <p>Address: ${restaurant.address}</p>
+                    <p>Description: ${restaurant.description}</p>
+                    <h3>Menus:</h3>
+                    <ul>
+                        <li>Food Menu: ${restaurant.menus.foods.join(', ')}</li>
+                        <li>Drink Menu: ${restaurant.menus.drinks.join(', ')}</li>
+                    </ul>
+                    <h3>Customer Reviews:</h3>
+                    <ul>
+                        ${restaurant.customerReviews.map(review => `
+                            <li>
+                                <p>Name: ${review.name}</p>
+                                <p>Date: ${review.date}</p>
+                                <p>Review: ${review.review}</p>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                favoriteList.appendChild(restaurantItem);
+            });
+        }
+
+        // Call the function to display favorite restaurants when the page loads
+        window.addEventListener('load', displayFavoriteRestaurants);
+    </script>
+
+    <!-- JavaScript for Skip to Content Button and Back to Top Link -->
+    <script>
+        // Show skip-to-content button when navigating with keyboard tab
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Tab') {
+                document.querySelector('.skip-link').style.display = 'block';
+            }
+        });
+
+        // Flag untuk menandakan apakah tombol Skip to Content sudah diklik
+        let skipClicked = false;
+
+        // Functionality for skip-to-content button
+        document.getElementById('skip-to-content').addEventListener('click', function () {
+            document.querySelector('.favorite-restaurants').scrollIntoView({ behavior: 'smooth' });
+
+            // Hide the skip-to-content button after clicking
+            this.style.display = 'none';
+
+            // Set flag to true
+            skipClicked = true;
+        });
+
+        // Functionality for handling keyboard tab press
+        document.addEventListener('keydown', function (event) {
+            if (event.code === 'Tab' && skipClicked) {
+                // Jika tombol Skip to Content sudah diklik sebelumnya, jangan tampilkan kembali
+                document.getElementById('skip-to-content').style.display = 'none';
+            }
+        });
+
+        // Show the back-to-top button when scrolling down
+        window.addEventListener('scroll', function () {
+            var backToTopButton = document.querySelector('.back-to-top');
+            if (window.scrollY > 200) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+    </script>
+
 </body>
 
 </html>

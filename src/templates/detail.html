@@ -5,16 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Detail</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 
 <body>
+    <!-- Skip to Content Button -->
     <header>
         <button class="skip-link" id="skip-to-content" tabindex="0">Skip to Content</button>
         <nav>
             <div class="logo">
-                <a href="/">Restaurant Catalog</a>
+                <a href="#">Restaurant Catalog</a>
             </div>
+            <!-- Hamburger Button (For Mobile Version) -->
             <button class="burger" aria-label="Toggle Menu" aria-expanded="false">
                 <div class="line1"></div>
                 <div class="line2"></div>
@@ -22,30 +24,157 @@
             </button>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/favorites.html">Favorites</a></li>
+                <li><a href="favorites.html">Favorite</a></li>
                 <li><a href="#">About Us</a></li>
             </ul>
         </nav>
     </header>
 
+    <!-- Main Content -->
     <main id="main-content">
+        <!-- Restaurant Detail Section -->
         <section class="restaurant-detail" id="restaurant-detail">
-            <!-- Restaurant details will be displayed here -->
+            <!-- Detail content will be displayed here -->
         </section>
     </main>
 
+    <!-- Back to Top Link -->
     <a href="#top" class="back-to-top">Back to Top</a>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <p>&copy; 2024 - Restaurant Catalog. All rights reserved.</p>
+            <!-- Additional footer content -->
         </div>
     </footer>
 
-    <script src="../scripts/menu.js"></script>
-    <script src="../scripts/detail.js"></script>
-    <script src="../scripts/skipAndTop.js"></script>
-    <script src="../scripts/serviceWorker.js"></script>
+    <!-- JavaScript for Hamburger Button and Off-canvas Menu -->
+    <script>
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('nav');
+
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active'); // Add 'active' class to hamburger button
+            nav.classList.toggle('nav-active');
+            document.body.classList.toggle('nav-open');
+
+            const expanded = burger.getAttribute('aria-expanded') === 'true' || false;
+            burger.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Close menu when a link is clicked
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active'); // Remove 'active' class from hamburger button
+                nav.classList.remove('nav-active');
+                document.body.classList.remove('nav-open');
+                burger.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Close menu when clicking outside the menu
+        document.addEventListener('click', (event) => {
+            if (!nav.contains(event.target) && !burger.contains(event.target)) {
+                burger.classList.remove('active'); // Remove 'active' class from hamburger button
+                nav.classList.remove('nav-active');
+                document.body.classList.remove('nav-open');
+                burger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+
+    <!-- JavaScript to Fetch and Display Restaurant Detail -->
+    <script>
+        // Function to fetch and display restaurant detail based on URL query parameter
+        async function fetchAndDisplayRestaurantDetail() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const restaurantId = urlParams.get('id');
+                
+                if (!restaurantId) {
+                    console.error('Restaurant ID is missing in the URL query parameters.');
+                    return;
+                }
+
+                const response = await fetch(`data/restaurant-${restaurantId}.json`); // Adjust path accordingly
+                const data = await response.json();
+
+                const restaurantDetail = document.getElementById('restaurant-detail');
+
+                // Display restaurant detail
+                restaurantDetail.innerHTML = `
+                    <h1>${data.name}</h1>
+                    <img src="${data.pictureId}" alt="${data.name}">
+                    <p>City: ${data.city}</p>
+                    <p>Address: ${data.address}</p>
+                    <p>Description: ${data.description}</p>
+                    <h2>Menus:</h2>
+                    <ul>
+                        <li>Food Menu: ${data.menus.foods.join(', ')}</li>
+                        <li>Drink Menu: ${data.menus.drinks.join(', ')}</li>
+                    </ul>
+                    <h2>Customer Reviews:</h2>
+                    <ul>
+                        ${data.customerReviews.map(review => `
+                            <li>
+                                <p>Name: ${review.name}</p>
+                                <p>Date: ${review.date}</p>
+                                <p>Review: ${review.review}</p>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+            } catch (error) {
+                console.error('Error fetching or displaying restaurant detail:', error);
+            }
+        }
+
+        // Call the function to fetch and display restaurant detail when the page loads
+        window.addEventListener('load', fetchAndDisplayRestaurantDetail);
+    </script>
+
+    <!-- JavaScript for Skip to Content Button and Back to Top Link -->
+    <script>
+        // Show skip-to-content button when navigating with keyboard tab
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Tab') {
+                document.querySelector('.skip-link').style.display = 'block';
+            }
+        });
+        // Flag untuk menandakan apakah tombol Skip to Content sudah diklik
+        let skipClicked = false;
+
+        // Functionality for skip-to-content button
+        document.getElementById('skip-to-content').addEventListener('click', function () {
+            document.getElementById('restaurant-detail').scrollIntoView({ behavior: 'smooth' });
+
+            // Hide the skip-to-content button after clicking
+            this.style.display = 'none';
+
+            // Set flag to true
+            skipClicked = true;
+        });
+
+        // Functionality for handling keyboard tab press
+        document.addEventListener('keydown', function (event) {
+            if (event.code === 'Tab' && skipClicked) {
+                // Jika tombol Skip to Content sudah diklik sebelumnya, jangan tampilkan kembali
+                document.getElementById('skip-to-content').style.display = 'none';
+            }
+        });
+
+        // Show the back-to-top button when scrolling down
+        window.addEventListener('scroll', function () {
+            var backToTopButton = document.querySelector('.back-to-top');
+            if (window.scrollY > 200) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+    </script>
+
 </body>
 
 </html>
